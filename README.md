@@ -80,17 +80,48 @@ git clone <团队远程Git仓库地址>/team-agent-standards.git .agents
 > [!NOTE]
 > 仓库在本地克隆的目录名必须为 `.agents`。所有技能源码均已内联（Vendor 模式），**无需执行 npm install，无需安装额外依赖，离线可用**。
 
+---
+
 ### 步骤 2：为你的业务子项目开启规范
-在 Git Bash 中进入具体的业务项目目录并运行接入脚本：
+进入具体业务项目目录，在 Git Bash 中运行一行接入脚本：
 
 ```bash
 cd codes/my-subproject
 ../.agents/scripts/init-subproject.sh
 ```
 
-该命令会自动在子项目中生成：
-1. `.agents/skills.json`：声明继承父级通用技能；
-2. `AGENTS.md`：引入通用代码规范与 Git 提交规范。
+#### 🛡️ 智能兼容与无损合并特性：
+接入脚本对**全新子项目**与**已有成熟子项目**做了完善的防御性设计：
+- **无损合并 `skills.json`**：若子项目已有本地私有技能配置（如 `"entries": [...]`），脚本仅合并 `inherits` 通用继承路径，**100% 保留子项目原有配置**；
+- **智能注入 `AGENTS.md` / `GEMINI.md`**：自动识别大小写及不同命名规则文件；若已有规则文件，仅在原标题正下方插入团队规范引用，**保留项目原标题与原有业务规则，绝不产生重复标题**；
+- **纯净工作区**：完全依托 Git 版本追踪，**绝不生成任何 `.bak` 冗余垃圾文件**，改动随时通过 `git diff` 审查或 `git restore` 恢复；
+- **幂等安全**：多次重复执行自动检测并跳过，零副作用。
+
+接入完成后，子项目的标准接入状态如下：
+
+```json
+// .agents/skills.json（纯净简洁，零外部网络依赖）
+{
+  "inherits": [
+    {
+      "path": "../.agents/skills.json"
+    }
+  ]
+}
+```
+
+```markdown
+<!-- AGENTS.md 或现有规则文件 -->
+# Project Guidelines
+
+@[通用编码红线](../.agents/rules/common.md)
+@[Git提交规范](../.agents/rules/git.md)
+
+## 本项目专属规则
+<!-- 此处完好保留子项目原有的所有框架约定、业务规则与环境说明 -->
+```
+
+---
 
 ### 步骤 3：提交配置至业务仓库
 ```bash
@@ -153,7 +184,7 @@ bash ./scripts/new-skill.sh <your-skill-name>
 
 | 脚本文件 | 核心功能 | 执行命令示例 |
 | :--- | :--- | :--- |
-| `init-subproject.sh` | 业务子项目一键接入脚手架 | `bash ../.agents/scripts/init-subproject.sh` |
+| `init-subproject.sh` | 业务子项目一键接入脚手架（无损合并、无 bak、无重复标题） | `bash ../.agents/scripts/init-subproject.sh` |
 | `new-skill.sh` | 团队自研技能一键脚手架 | `bash ./scripts/new-skill.sh <skill-name>` |
 | `install.sh` | 团队新成员一键克隆安装自检工具 | `bash ./scripts/install.sh` |
 | `update-standards.sh` | 一键同步拉取团队最新规范与技能 | `bash ../.agents/scripts/update-standards.sh` |

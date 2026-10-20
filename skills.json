@@ -1,5 +1,4 @@
 {
-  "$schema": "https://antigravity.google/schemas/skills-config.json",
   "entries": [
     {
       "path": "./skills"
