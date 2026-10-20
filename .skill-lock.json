@@ -1,0 +1,85 @@
+{
+  "version": 3,
+  "skills": {
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-20T06:34:00.000Z"
+    },
+    "grill-with-docs": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/grill-with-docs/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-20T06:34:00.000Z"
+    },
+    "to-spec": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/to-spec/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-20T06:34:00.000Z"
+    },
+    "to-tickets": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/to-tickets/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-20T06:34:00.000Z"
+    },
+    "tdd": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/tdd/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-20T06:34:00.000Z"
+    },
+    "implement-spec": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/implement-spec/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-20T06:34:00.000Z"
+    },
+    "diagnosing-bugs": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/diagnosing-bugs/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-20T06:34:00.000Z"
+    },
+    "codebase-design": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/codebase-design/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-20T06:34:00.000Z"
+    },
+    "code-review": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/code-review/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-20T06:34:00.000Z"
+    },
+    "handoff": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/productivity/handoff/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-20T06:34:00.000Z"
+    }
+  }
+}
