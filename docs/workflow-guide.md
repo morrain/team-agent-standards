@@ -2,18 +2,7 @@
 
 传统的 AI 辅助编程往往是“开发者提一句话 $\to$ AI 盲目堆写几百行代码 $\to$ 开发者花费数小时排查 Bug 和坏味道”。
 
-**`team-agent-standards`** 提倡一种**严谨、确定性、高交付质量**的敏捷工程全流程 SOP：
-
-```mermaid
-flowchart TD
-    Step1["阶段 1：方案深挖与对齐<br/>/grill-me"] --> Step2["阶段 2：输出规格说明书<br/>/to-spec"]
-    Step2 --> Step3["阶段 3：原子任务切片<br/>/to-tickets"]
-    Step3 --> Step4["阶段 4：测试驱动编码<br/>/tdd & /implement-spec"]
-    Step4 --> Step5["阶段 5：双轴代码审查<br/>/code-review"]
-    Step5 --> Step6["阶段 6：规范化提交与 PR<br/>Conventional Commits"]
-    
-    Step4 -.会话过长/交接.-> Handoff["/handoff (上下文压缩)"]
-```
+**`team-agent-standards`** 提倡一种**严谨、确定性、高交付质量**的敏捷工程全流程 SOP
 
 ---
 

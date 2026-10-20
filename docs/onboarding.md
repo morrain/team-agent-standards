@@ -32,7 +32,7 @@ git clone <团队远程Git地址>/team-agent-standards.git .agents
 ```
 
 ### 2. 提交接入配置到业务仓库
-该脚本采用无损合并设计（不产生 `.bak` 垃圾文件，已有私有技能与自定义规则 100% 保留）：
+该脚本采用无损合并设计：
 - `.agents/skills.json`：声明继承父级通用技能（保留项目已有私有技能）；
 - `AGENTS.md`：原生引入团队通用编码红线与 Git 规范（保留项目原标题与原有业务规则）。
 
@@ -70,9 +70,5 @@ git push
 ```bash
 cd codes/.agents
 git pull
-```
-或者运行：
-```bash
-bash ../.agents/scripts/update-standards.sh
 ```
 本地所有子项目瞬间同步获得最新能力！

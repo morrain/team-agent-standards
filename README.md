@@ -14,56 +14,10 @@
 在传统 AI 编程中，工程师往往面临 **“AI 盲目堆写代码、缺乏架构推演、风格五花八门、频繁引入隐式 Bug”** 的问题。
 
 `team-agent-standards` 将现代敏捷软件工程全流程固化为标准化 Agent 资产：
-- **静态宪法（Rules）**：常驻运行的代码质量红线、防御性编程与 Conventional Commits 提交规范；
-- **动态流程（Skills）**：经受工业界实战检验的 Matt Pocock 10 大核心工程技能（SOP）；
-- **自研脚手架（Templates）**：规范自研技能模板（隔离存放，零上下文 Token 浪费），配套一键脚手架；
+- **静态规则（Rules）**：常驻运行的代码质量红线、防御性编程与 Conventional Commits 提交规范；
+- **动态流程（Skills）**：经受业界实战检验的 Matt Pocock 10 大核心工程技能（SOP）；
+- **自研脚手架（Templates）**：规范自研 skill 模板，配套一键脚手架；
 - **极简继承（Inheritance）**：子仓库声明式继承，一人配置，全组免装即用。
-
----
-
-## 🏗️ 架构图解与继承机制
-
-```mermaid
-graph TD
-    subgraph Upstream ["开源社区 (skills.sh / GitHub)"]
-        MP["mattpocock/skills<br/>(精选 10 大核心工程技能)"]
-    end
-
-    subgraph DeveloperMachine ["开发者本地工作区 (codes 目录)"]
-        subgraph StandardsRepo [".agents/ (克隆自 team-agent-standards.git)"]
-            SJ["skills.json (通用技能注册表)"]
-            Lock[".skill-lock.json (依赖锁定表)"]
-            
-            subgraph RuntimeSkills ["skills/ (运行时技能库 - 仅扫描此处)"]
-                Skills["Matt Pocock 10 大核心技能 + 团队正式自研技能<br/>• grill-me / grill-with-docs<br/>• to-spec / to-tickets<br/>• tdd / implement-spec<br/>• codebase-design / diagnosing-bugs<br/>• code-review / handoff"]
-            end
-
-            subgraph IsolatedTemplates ["templates/ (模板隔离区 - 不消耗运行时 Token)"]
-                Tpl["skill-template/ (自研规范参考模板)"]
-            end
-
-            Rules["rules/<br/>• common.md (代码质量红线)<br/>• git.md (提交规范)"]
-            Scripts["scripts/<br/>• init-subproject.sh (子仓库接入)<br/>• new-skill.sh (自研技能脚手架)<br/>• update-standards.sh (同步更新)<br/>• manage-skills.sh (第三方管理)"]
-        end
-
-        subgraph ProjectA ["codes/project-a/ (业务子项目 A)"]
-            ConfigA[".agents/skills.json (inherits: ../.agents/skills.json)"]
-            RuleA["AGENTS.md (@[通用规范](../.agents/rules/common.md))"]
-        end
-
-        subgraph ProjectB ["codes/project-b/ (业务子项目 B)"]
-            ConfigB[".agents/skills.json (inherits: ../.agents/skills.json)"]
-            RuleB["AGENTS.md (@[通用规范](../.agents/rules/common.md))"]
-        end
-
-        ConfigA -->|"显式继承"| SJ
-        RuleA -->|"Include 展开"| Rules
-        ConfigB -->|"显式继承"| SJ
-        RuleB -->|"Include 展开"| Rules
-        MP -->|"Vendor 入库"| Skills
-        Tpl -.->|"new-skill.sh 生成"| Skills
-    end
-```
 
 ---
 
@@ -94,7 +48,6 @@ cd codes/my-subproject
 接入脚本对**全新子项目**与**已有成熟子项目**做了完善的防御性设计：
 - **无损合并 `skills.json`**：若子项目已有本地私有技能配置（如 `"entries": [...]`），脚本仅合并 `inherits` 通用继承路径，**100% 保留子项目原有配置**；
 - **智能注入已有规则文件（如 AGENTS.md 等）**：自动识别项目根目录下不同命名习惯的既有规则文件；若已有规则文件，仅在原标题正下方插入团队规范引用，**保留项目原标题与原有业务规则，绝不产生重复标题**；
-- **纯净工作区**：完全依托 Git 版本追踪，**绝不生成任何 `.bak` 冗余垃圾文件**，改动随时通过 `git diff` 审查或 `git restore` 恢复；
 - **幂等安全**：多次重复执行自动检测并跳过，零副作用。
 
 接入完成后，子项目的标准接入状态如下：
@@ -129,7 +82,7 @@ git add .agents/skills.json AGENTS.md
 git commit -m "chore: enable team-agent-standards"
 git push
 ```
-**完成！** 团队其他成员拉取该分支后，因本地也存在 `.agents`，将**自动生效，零额外配置**！
+**完成！** 团队其他成员拉取该分支后， `.agents`，将**自动生效，零额外配置**！
 
 ---
 
@@ -184,10 +137,8 @@ bash ./scripts/new-skill.sh <your-skill-name>
 
 | 脚本文件 | 核心功能 | 执行命令示例 |
 | :--- | :--- | :--- |
-| `init-subproject.sh` | 业务子项目一键接入脚手架（无损合并、无 bak、无重复标题） | `bash ../.agents/scripts/init-subproject.sh` |
+| `init-subproject.sh` | 业务子项目一键接入脚手架 | `bash ../.agents/scripts/init-subproject.sh` |
 | `new-skill.sh` | 团队自研技能一键脚手架 | `bash ./scripts/new-skill.sh <skill-name>` |
-| `install.sh` | 团队新成员一键克隆安装自检工具 | `bash ./scripts/install.sh` |
-| `update-standards.sh` | 一键同步拉取团队最新规范与技能 | `bash ../.agents/scripts/update-standards.sh` |
 | `manage-skills.sh` | 维护第三方开源技能工具 (List/Add/Update/Audit) | `bash ./scripts/manage-skills.sh list` |
 | `check-health.sh` | 规范完整性与 Frontmatter 格式自检脚本 | `bash ./scripts/check-health.sh` |
 
@@ -205,11 +156,8 @@ bash ./scripts/new-skill.sh <your-skill-name>
 ## 🔄 团队日常更新与同步
 
 ```bash
-# 方式 A：进入 .agents 目录直接拉取
+# 进入 .agents 目录直接拉取
 cd codes/.agents
 git pull
-
-# 方式 B：执行更新自检脚本
-bash ../.agents/scripts/update-standards.sh
 ```
 更新后，本地所有业务子项目立即同步获得团队最新研发能力！
