@@ -67,7 +67,9 @@ cd codes/my-subproject
 <!-- AGENTS.md 或现有规则文件 -->
 # Project Guidelines
 
+@[Agent行为准则](../.agents/rules/agent.md)
 @[通用编码红线](../.agents/rules/common.md)
+@[自动化测试规范](../.agents/rules/testing.md)
 @[Git提交规范](../.agents/rules/git.md)
 
 ## 本项目专属规则
@@ -119,15 +121,28 @@ bash ./scripts/new-skill.sh <your-skill-name>
 
 ## 📏 通用静态规则库 (Rules)
 
+- **`rules/agent.md`（Agent 协作纪律与行为红线）**：
+  - **严禁偷懒占位**：杜绝 `// TODO: implement later`、`pass` 等伪完成代码；
+  - **最小爆炸半径**：严格控制代码变更范围，严禁借机全局格式化污染 `git blame`；
+  - **真实运行验证**：必须真实执行构建与测试命令，拒绝口头幻觉通过；
+  - **科学排错**：基于报错日志与根因假设做靶向修复，杜绝盲目随机试错。
 - **`rules/common.md`（通用代码质量与安全红线）**：
+  - **深度模块设计**：接口小巧、实现完备；单函数不超过 50 行，圈复杂度严格受限；
   - **严禁吞异常**：杜绝空的 `catch (e) {}`，强制结构化日志上报；
   - **杜绝魔法值**：常量集中定义，变量命名强制自解释；
-  - **单函数控制**：函数原则上不超过 50 行，圈复杂度严格受限；
-  - **安全最高红线**：严禁硬编码任何 API Key、Token 或数据库明文凭证。
+  - **类型与并发安全**：TS 严禁无节制 `any`，避免异步悬空（Floating Promises）；
+  - **安全最高红线**：严禁硬编码任何 API Key、Token 或数据库明文凭证，敏感日志脱敏。
+- **`rules/testing.md`（自动化测试与质量守护规范）**：
+  - **测试金字塔与 TDD**：核心业务与边界分支必须有测试覆盖，优先遵循红-绿-重构；
+  - **独立性与副作用隔离**：单测严禁直连外部生产网络与真实数据库，环境状态确定性清理；
+  - **合理 Mock 边界**：仅 Mock 系统边界依赖，严禁 Mock 被测模块内部私有实现，防脆弱测试；
+  - **有效精确断言**：杜绝无断言假测试，针对业务核心契约与具体异常类型精准断言。
 - **`rules/git.md`（Git 协同与提交规范）**：
-  - 强制遵循 **Conventional Commits**（`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`）；
-  - 原子性提交原则；
-  - 统一分支命名标准（`feature/*`, `bugfix/*`）。
+  - **变动操作强制确认**：严禁擅自执行 `commit`, `push`, `reset`, `checkout`, `merge`, `stash` 等变动仓库的操作，必须向用户展示完整命令与变更详情，获得明确确认后方可执行；
+  - **Conventional Commits**：强制遵循规范类型（`feat`, `fix`, `refactor`, `perf`, `test` 等）；
+  - **破坏性变更显式声明**：采用 `feat!:` 或在 Footer 注明 `BREAKING CHANGE:`；
+  - **原子性提交原则**：一个 Commit 只做一件事，保持历史清晰可追溯；
+  - **统一分支标准与 PR 规范**：统一分支命名，PR 必须包含 Why、What 与验证凭证。
 
 ---
 

@@ -34,17 +34,13 @@ else
 fi
 
 # 2. 检查规则
-if [ -f "$REPO_ROOT/rules/common.md" ]; then
-    assert_check 0 "rules/common.md 存在"
-else
-    assert_check 1 "rules/common.md 缺失"
-fi
-
-if [ -f "$REPO_ROOT/rules/git.md" ]; then
-    assert_check 0 "rules/git.md 存在"
-else
-    assert_check 1 "rules/git.md 缺失"
-fi
+for rule_file in "agent.md" "common.md" "testing.md" "git.md"; do
+    if [ -f "$REPO_ROOT/rules/$rule_file" ]; then
+        assert_check 0 "rules/$rule_file 存在"
+    else
+        assert_check 1 "rules/$rule_file 缺失"
+    fi
+done
 
 # 3. 检查自研规范模板（处于 templates 隔离目录，避免污染运行时）
 if [ -f "$REPO_ROOT/templates/skill-template/SKILL.md" ]; then

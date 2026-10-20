@@ -104,7 +104,9 @@ if [ -z "$EXISTING_RULE_FILE" ]; then
     cat << 'EOF' > "$NEW_AGENTS_MD"
 # Project Guidelines
 
+@[Agent行为准则](../.agents/rules/agent.md)
 @[通用编码红线](../.agents/rules/common.md)
+@[自动化测试规范](../.agents/rules/testing.md)
 @[Git提交规范](../.agents/rules/git.md)
 
 ## 本项目专属规则
@@ -112,24 +114,41 @@ if [ -z "$EXISTING_RULE_FILE" ]; then
 EOF
     echo "[+] 新建规则配置文件: $NEW_AGENTS_MD"
 else
-    # 已存在规则文件，检查是否已引用
-    if grep -q "\.\./\.agents/rules/common\.md" "$EXISTING_RULE_FILE"; then
-        echo "[✓] 现有规则文件 $(basename "$EXISTING_RULE_FILE") 已包含通用规范引用，无需修改"
+    # 已存在规则文件，检查缺失的通用规范并无损增量注入
+    RULES_MAP=(
+        "agent.md:@[Agent行为准则](../.agents/rules/agent.md)"
+        "common.md:@[通用编码红线](../.agents/rules/common.md)"
+        "testing.md:@[自动化测试规范](../.agents/rules/testing.md)"
+        "git.md:@[Git提交规范](../.agents/rules/git.md)"
+    )
+
+    MISSING_RULES=()
+    for item in "${RULES_MAP[@]}"; do
+        file_key="${item%%:*}"
+        rule_tag="${item#*:}"
+        if ! grep -q "\.\./\.agents/rules/$file_key" "$EXISTING_RULE_FILE"; then
+            MISSING_RULES+=("$rule_tag")
+        fi
+    done
+
+    if [ "${#MISSING_RULES[@]}" -eq 0 ]; then
+        echo "[✓] 现有规则文件 $(basename "$EXISTING_RULE_FILE") 已包含全部通用规范引用，无需修改"
     else
-        # 针对已有文件，仅注入引用指令，绝不重复生成标题
         TMP_RULE=$(mktemp)
         if head -n 1 "$EXISTING_RULE_FILE" | grep -q "^# "; then
-            # 第一行是一级标题：保留原标题，将引用插入在标题正下方
+            # 第一行是一级标题：保留原标题，将缺失规则插入在标题正下方
             head -n 1 "$EXISTING_RULE_FILE" > "$TMP_RULE"
             echo "" >> "$TMP_RULE"
-            echo "@[通用编码红线](../.agents/rules/common.md)" >> "$TMP_RULE"
-            echo "@[Git提交规范](../.agents/rules/git.md)" >> "$TMP_RULE"
+            for rule in "${MISSING_RULES[@]}"; do
+                echo "$rule" >> "$TMP_RULE"
+            done
             echo "" >> "$TMP_RULE"
             tail -n +2 "$EXISTING_RULE_FILE" >> "$TMP_RULE"
         else
-            # 第一行不是标题：直接在文件顶部插入引用
-            echo "@[通用编码红线](../.agents/rules/common.md)" > "$TMP_RULE"
-            echo "@[Git提交规范](../.agents/rules/git.md)" >> "$TMP_RULE"
+            # 第一行不是标题：直接在文件顶部插入规则
+            for rule in "${MISSING_RULES[@]}"; do
+                echo "$rule" >> "$TMP_RULE"
+            done
             echo "" >> "$TMP_RULE"
             cat "$EXISTING_RULE_FILE" >> "$TMP_RULE"
         fi

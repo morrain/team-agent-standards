@@ -47,7 +47,7 @@ bash ./scripts/check-health.sh
 
 ## 二、如何提议修改通用 Rules
 
-通用规则（`rules/common.md`, `rules/git.md`）会影响所有业务子项目，因此修改规则需遵循以下原则：
+通用规则（`rules/agent.md`, `rules/common.md`, `rules/testing.md`, `rules/git.md`）会影响所有业务子项目，因此修改规则需遵循以下原则：
 1. **普适性**：该规则必须对团队绝大多数项目（无论前端、后端或算法）都具有约束价值；
 2. **确定性**：规则必须清晰、无歧义，Agent 能够明确执行判断；
 3. **评审共识**：修改规则需提交 PR 并至少经过 2 位核心工程师 Review 同意。
