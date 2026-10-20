@@ -46,7 +46,14 @@ else
     assert_check 1 "rules/git.md 缺失"
 fi
 
-# 3. 检查技能
+# 3. 检查自研规范模板（处于 templates 隔离目录，避免污染运行时）
+if [ -f "$REPO_ROOT/templates/skill-template/SKILL.md" ]; then
+    assert_check 0 "templates/skill-template/SKILL.md 模板存在且已正确隔离"
+else
+    assert_check 1 "templates/skill-template/SKILL.md 模板缺失"
+fi
+
+# 4. 检查运行时技能
 SKILLS_DIR="$REPO_ROOT/skills"
 for dir in "$SKILLS_DIR"/*/; do
     if [ -d "$dir" ]; then
@@ -66,6 +73,7 @@ done
 echo "================================================="
 if [ "$FAIL_COUNT" -eq 0 ]; then
     echo "  自检全部通过！(PASS: $PASS_COUNT, FAIL: 0)"
+    echo "  本仓库处于健康完备状态，可直接投入生产使用。"
 else
     echo "  自检发现异常！(PASS: $PASS_COUNT, FAIL: $FAIL_COUNT)"
 fi

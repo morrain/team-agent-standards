@@ -16,6 +16,7 @@
 `team-agent-standards` 将现代敏捷软件工程全流程固化为标准化 Agent 资产：
 - **静态宪法（Rules）**：常驻运行的代码质量红线、防御性编程与 Conventional Commits 提交规范；
 - **动态流程（Skills）**：经受工业界实战检验的 Matt Pocock 10 大核心工程技能（SOP）；
+- **自研脚手架（Templates）**：规范自研技能模板（隔离存放，零上下文 Token 浪费），配套一键脚手架；
 - **极简继承（Inheritance）**：子仓库声明式继承，一人配置，全组免装即用。
 
 ---
@@ -32,9 +33,17 @@ graph TD
         subgraph StandardsRepo [".agents/ (克隆自 team-agent-standards.git)"]
             SJ["skills.json (通用技能注册表)"]
             Lock[".skill-lock.json (依赖锁定表)"]
-            Skills["skills/ (Vendor 源码随库入库)<br/>• grill-me / grill-with-docs<br/>• to-spec / to-tickets<br/>• tdd / implement-spec<br/>• codebase-design / diagnosing-bugs<br/>• code-review / handoff<br/>• template-skill"]
+            
+            subgraph RuntimeSkills ["skills/ (运行时技能库 - 仅扫描此处)"]
+                Skills["Matt Pocock 10 大核心技能 + 团队正式自研技能<br/>• grill-me / grill-with-docs<br/>• to-spec / to-tickets<br/>• tdd / implement-spec<br/>• codebase-design / diagnosing-bugs<br/>• code-review / handoff"]
+            end
+
+            subgraph IsolatedTemplates ["templates/ (模板隔离区 - 不消耗运行时 Token)"]
+                Tpl["skill-template/ (自研规范参考模板)"]
+            end
+
             Rules["rules/<br/>• common.md (代码质量红线)<br/>• git.md (提交规范)"]
-            Scripts["scripts/<br/>• init-subproject.sh (子仓库接入)<br/>• update-standards.sh (同步更新)<br/>• manage-skills.sh (第三方管理)"]
+            Scripts["scripts/<br/>• init-subproject.sh (子仓库接入)<br/>• new-skill.sh (自研技能脚手架)<br/>• update-standards.sh (同步更新)<br/>• manage-skills.sh (第三方管理)"]
         end
 
         subgraph ProjectA ["codes/project-a/ (业务子项目 A)"]
@@ -52,6 +61,7 @@ graph TD
         ConfigB -->|"显式继承"| SJ
         RuleB -->|"Include 展开"| Rules
         MP -->|"Vendor 入库"| Skills
+        Tpl -.->|"new-skill.sh 生成"| Skills
     end
 ```
 
@@ -111,6 +121,18 @@ git push
 
 ---
 
+## 💡 开发团队自研技能 (Custom Skills)
+
+我们提供了专门的脚手架工具，模板隔离在 `templates/` 目录中，杜绝污染日常会话的上下文 Token：
+
+```bash
+# 一键创建自研技能骨架
+bash ./scripts/new-skill.sh <your-skill-name>
+```
+脚本会自动在 `skills/<your-skill-name>/` 下生成符合 Antigravity / Cursor 标准规范的骨架目录及 `SKILL.md`，完善后提交 PR 即可全团队共享！
+
+---
+
 ## 📏 通用静态规则库 (Rules)
 
 - **`rules/common.md`（通用代码质量与安全红线）**：
@@ -132,6 +154,7 @@ git push
 | 脚本文件 | 核心功能 | 执行命令示例 |
 | :--- | :--- | :--- |
 | `init-subproject.sh` | 业务子项目一键接入脚手架 | `bash ../.agents/scripts/init-subproject.sh` |
+| `new-skill.sh` | 团队自研技能一键脚手架 | `bash ./scripts/new-skill.sh <skill-name>` |
 | `install.sh` | 团队新成员一键克隆安装自检工具 | `bash ./scripts/install.sh` |
 | `update-standards.sh` | 一键同步拉取团队最新规范与技能 | `bash ../.agents/scripts/update-standards.sh` |
 | `manage-skills.sh` | 维护第三方开源技能工具 (List/Add/Update/Audit) | `bash ./scripts/manage-skills.sh list` |
