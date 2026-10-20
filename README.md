@@ -34,7 +34,7 @@ graph TD
             Lock[".skill-lock.json (依赖锁定表)"]
             Skills["skills/ (Vendor 源码随库入库)<br/>• grill-me / grill-with-docs<br/>• to-spec / to-tickets<br/>• tdd / implement-spec<br/>• codebase-design / diagnosing-bugs<br/>• code-review / handoff<br/>• template-skill"]
             Rules["rules/<br/>• common.md (代码质量红线)<br/>• git.md (提交规范)"]
-            Scripts["scripts/<br/>• init-subproject (子仓库接入)<br/>• update-standards (同步更新)<br/>• manage-skills (第三方管理)"]
+            Scripts["scripts/<br/>• init-subproject.sh (子仓库接入)<br/>• update-standards.sh (同步更新)<br/>• manage-skills.sh (第三方管理)"]
         end
 
         subgraph ProjectA ["codes/project-a/ (业务子项目 A)"]
@@ -60,7 +60,7 @@ graph TD
 ## ⚡ 30 秒极速上手
 
 ### 步骤 1：首次安装（每台电脑仅需执行一次）
-进入你的项目父级目录（如 `~/codes` 或 `D:\codes`）：
+在 Git Bash 中进入你的项目父级目录（如 `~/codes` 或 `D:/codes`）：
 
 ```bash
 cd codes
@@ -71,16 +71,12 @@ git clone <团队远程Git仓库地址>/team-agent-standards.git .agents
 > 仓库在本地克隆的目录名必须为 `.agents`。所有技能源码均已内联（Vendor 模式），**无需执行 npm install，无需安装额外依赖，离线可用**。
 
 ### 步骤 2：为你的业务子项目开启规范
-进入具体的业务项目目录：
+在 Git Bash 中进入具体的业务项目目录并运行接入脚本：
 
-- **Windows 用户 (PowerShell)**：
-  ```powershell
-  ..\.agents\scripts\init-subproject.ps1
-  ```
-- **macOS / Linux 用户 (Bash)**：
-  ```bash
-  ../.agents/scripts/init-subproject.sh
-  ```
+```bash
+cd codes/my-subproject
+../.agents/scripts/init-subproject.sh
+```
 
 该命令会自动在子项目中生成：
 1. `.agents/skills.json`：声明继承父级通用技能；
@@ -129,15 +125,17 @@ git push
 
 ---
 
-## 🧰 运维脚本套件 (`scripts/`)
+## 🧰 统一运维脚本套件 (`scripts/`)
 
-| 脚本文件 | 适用系统 | 核心功能 |
+全团队通过 Git Bash 统一调用 Bash 脚本执行运维：
+
+| 脚本文件 | 核心功能 | 执行命令示例 |
 | :--- | :--- | :--- |
-| `init-subproject.ps1 / .sh` | Windows / Unix | 业务子项目一键接入脚手架 |
-| `install.ps1 / .sh` | Windows / Unix | 团队新成员一键克隆安装自检工具 |
-| `update-standards.ps1 / .sh` | Windows / Unix | 一键同步拉取团队最新规范与技能 |
-| `manage-skills.ps1 / .sh` | Windows / Unix | 架构师维护第三方开源技能工具 (List / Add / Update / Audit) |
-| `check-health.ps1 / .sh` | Windows / Unix | 规范完整性与 Frontmatter 格式自检脚本 |
+| `init-subproject.sh` | 业务子项目一键接入脚手架 | `bash ../.agents/scripts/init-subproject.sh` |
+| `install.sh` | 团队新成员一键克隆安装自检工具 | `bash ./scripts/install.sh` |
+| `update-standards.sh` | 一键同步拉取团队最新规范与技能 | `bash ../.agents/scripts/update-standards.sh` |
+| `manage-skills.sh` | 维护第三方开源技能工具 (List/Add/Update/Audit) | `bash ./scripts/manage-skills.sh list` |
+| `check-health.sh` | 规范完整性与 Frontmatter 格式自检脚本 | `bash ./scripts/check-health.sh` |
 
 ---
 
@@ -158,6 +156,6 @@ cd codes/.agents
 git pull
 
 # 方式 B：执行更新自检脚本
-..\.agents\scripts\update-standards.ps1
+bash ../.agents/scripts/update-standards.sh
 ```
 更新后，本地所有业务子项目立即同步获得团队最新研发能力！

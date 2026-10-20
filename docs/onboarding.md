@@ -6,7 +6,7 @@
 
 ## 一、首次安装配置（只需执行一次）
 
-在你的本地代码根目录（即存放各个 Git 项目的父级目录，如 `~/codes` 或 `D:\codes`）打开终端：
+在你的本地代码根目录（即存放各个 Git 项目的父级目录，如 `~/codes` 或 `D:/codes`）打开 **Git Bash**：
 
 ### 1. 克隆通用范式仓库
 ```bash
@@ -24,19 +24,14 @@ git clone <团队远程Git地址>/team-agent-standards.git .agents
 
 ## 二、为你的业务子项目开启规范
 
-进入任意你正在开发的子项目目录（如 `codes/my-project`）：
+在 Git Bash 中进入任意你正在开发的子项目目录（如 `codes/my-project`）：
 
-### 1. Windows 用户 (PowerShell)
-```powershell
-..\.agents\scripts\init-subproject.ps1
-```
-
-### 2. macOS / Linux 用户 (Bash)
+### 1. 运行一键接入脚本
 ```bash
 ../.agents/scripts/init-subproject.sh
 ```
 
-### 3. 提交接入配置到业务仓库
+### 2. 提交接入配置到业务仓库
 该脚本会自动在子项目中生成两个轻量配置文件：
 - `.agents/skills.json`：声明继承父级通用技能；
 - `AGENTS.md`：原生引入团队通用编码红线与 Git 规范。
@@ -71,13 +66,13 @@ git push
 
 ## 四、日常更新与同步
 
-当团队发布了新的自研 Skill 或更新了代码红线规范时，只需在终端中执行：
+当团队发布了新的自研 Skill 或更新了代码红线规范时，只需在 Git Bash 中执行：
 ```bash
 cd codes/.agents
 git pull
 ```
 或者运行：
-```powershell
-..\.agents\scripts\update-standards.ps1
+```bash
+bash ../.agents/scripts/update-standards.sh
 ```
 本地所有子项目瞬间同步获得最新能力！

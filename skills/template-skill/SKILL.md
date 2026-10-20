@@ -58,6 +58,6 @@ description: >-
 ## 四、自研技能发布与提交流程
 
 1. 在 `skills/<your-skill-name>/` 下完成编写；
-2. 运行 `.\scripts\check-health.ps1` 校验 Frontmatter 与链接有效性；
+2. 运行 `bash ./scripts/check-health.sh` 校验 Frontmatter 与链接有效性；
 3. 提交 PR 至 `team-agent-standards` 仓库；
 4. 评审合并后，全团队执行 `git pull` 即可同步生效。

@@ -27,8 +27,8 @@ description: >-
 
 ### 3. 本地自检
 提交前，运行健康检查脚本确保语法与相对链接无误：
-```powershell
-.\scripts\check-health.ps1
+```bash
+bash ./scripts/check-health.sh
 ```
 
 ---
@@ -46,7 +46,7 @@ description: >-
 
 如果社区（如 `skills.sh` 或 GitHub）有优秀的开源 Skill 希望引入：
 1. **代码审查**：务必审查其 `SKILL.md` 和附带脚本，严防提示词注入（Prompt Injection）或恶意系统命令；
-2. **依赖锁定**：使用 `manage-skills.ps1 add <source>` 安装并生成 `.skill-lock.json`；
+2. **依赖锁定**：使用 `bash ./scripts/manage-skills.sh add <source>` 安装并生成 `.skill-lock.json`；
 3. **源码入库**：以 Vendor 模式一同提交 Git，确保离线可用与防删库。
 
 ---
