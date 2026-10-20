@@ -48,7 +48,7 @@ git push
 
 ## 三、常用日常开发指令 (Cheat Sheet)
 
-在支持 Antigravity / Cursor / Claude Code 等支持 Agent 的聊天窗口中，随时敲入以下指令唤醒对应 SOP：
+在各类支持 Agent 的编码助手或交互会话中，随时输入以下指令唤醒对应 SOP：
 
 | 阶段 | 快捷指令 | 适用场景 |
 | :--- | :--- | :--- |

@@ -5,7 +5,7 @@
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)]()
-[![Platform](https://img.shields.io/badge/Platform-Antigravity%20%7C%20Cursor%20%7C%20Claude%20Code-orange.svg)]()
+[![Platform](https://img.shields.io/badge/Platform-Universal%20Coding%20Agents-blue.svg)]()
 
 ---
 
@@ -93,7 +93,7 @@ cd codes/my-subproject
 #### 🛡️ 智能兼容与无损合并特性：
 接入脚本对**全新子项目**与**已有成熟子项目**做了完善的防御性设计：
 - **无损合并 `skills.json`**：若子项目已有本地私有技能配置（如 `"entries": [...]`），脚本仅合并 `inherits` 通用继承路径，**100% 保留子项目原有配置**；
-- **智能注入 `AGENTS.md` / `GEMINI.md`**：自动识别大小写及不同命名规则文件；若已有规则文件，仅在原标题正下方插入团队规范引用，**保留项目原标题与原有业务规则，绝不产生重复标题**；
+- **智能注入已有规则文件（如 AGENTS.md 等）**：自动识别项目根目录下不同命名习惯的既有规则文件；若已有规则文件，仅在原标题正下方插入团队规范引用，**保留项目原标题与原有业务规则，绝不产生重复标题**；
 - **纯净工作区**：完全依托 Git 版本追踪，**绝不生成任何 `.bak` 冗余垃圾文件**，改动随时通过 `git diff` 审查或 `git restore` 恢复；
 - **幂等安全**：多次重复执行自动检测并跳过，零副作用。
 
@@ -160,7 +160,7 @@ git push
 # 一键创建自研技能骨架
 bash ./scripts/new-skill.sh <your-skill-name>
 ```
-脚本会自动在 `skills/<your-skill-name>/` 下生成符合 Antigravity / Cursor 标准规范的骨架目录及 `SKILL.md`，完善后提交 PR 即可全团队共享！
+脚本会自动在 `skills/<your-skill-name>/` 下生成符合通用 Agent 标准规范的骨架目录及 `SKILL.md`，完善后提交 PR 即可全团队共享！
 
 ---
 
