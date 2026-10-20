@@ -26,11 +26,11 @@ assert_check() {
     fi
 }
 
-# 1. 检查 skills.json
-if [ -f "$REPO_ROOT/skills.json" ]; then
-    assert_check 0 "skills.json 配置文件存在"
+# 1. 检查 skills 核心通用技能目录
+if [ -d "$REPO_ROOT/skills" ]; then
+    assert_check 0 "skills 通用技能目录存在"
 else
-    assert_check 1 "skills.json 缺失"
+    assert_check 1 "skills 通用技能目录缺失"
 fi
 
 # 2. 检查规则

@@ -6,6 +6,9 @@
 set -e
 
 TARGET_DIR="${1:-$(pwd)}"
+if [ ! -d "$TARGET_DIR" ]; then
+    mkdir -p "$TARGET_DIR"
+fi
 TARGET_DIR=$(cd "$TARGET_DIR" && pwd)
 
 echo "================================================="
@@ -22,25 +25,28 @@ fi
 
 # 2. 处理 .agents/skills.json（支持无损合并）
 SKILLS_JSON="$AGENT_DIR/skills.json"
-INHERIT_PATH="../.agents/skills.json"
+TEAM_SKILLS_PATH="../.agents/skills"
 
 if [ ! -f "$SKILLS_JSON" ]; then
     cat << EOF > "$SKILLS_JSON"
 {
-  "inherits": [
+  "entries": [
     {
-      "path": "$INHERIT_PATH"
+      "path": "$TEAM_SKILLS_PATH"
     }
   ]
 }
 EOF
-    echo "[+] 新建通用技能继承配置: $SKILLS_JSON"
+    echo "[+] 新建通用技能配置: $SKILLS_JSON"
 else
-    # 检查是否已包含继承路径
-    if grep -q "\.\./\.agents/skills\.json" "$SKILLS_JSON" 2>/dev/null; then
-        echo "[✓] 现有 .agents/skills.json 已包含通用规范继承，跳过修改"
+    # 检查是否已包含通用技能路径，且不存在旧版无效 inherits
+    HAS_NEW_ENTRY=$(grep -q "\.\./\.agents/skills\"" "$SKILLS_JSON" 2>/dev/null && echo "1" || echo "0")
+    HAS_OLD_INHERIT=$(grep -q "\.\./\.agents/skills\.json" "$SKILLS_JSON" 2>/dev/null && echo "1" || echo "0")
+
+    if [ "$HAS_NEW_ENTRY" = "1" ] && [ "$HAS_OLD_INHERIT" = "0" ]; then
+        echo "[✓] 现有 .agents/skills.json 已包含通用规范配置，跳过修改"
     else
-        # 使用 node 安全合并 JSON，保留原有的 entries、exclude 等配置
+        # 使用 node 安全合并 JSON，保留原有的 entries、exclude 等配置，并平滑迁移旧版 inherits
         if command -v node >/dev/null 2>&1; then
             node -e "
                 const fs = require('fs');
@@ -54,37 +60,44 @@ else
                     console.error('JSON解析异常，重置格式:', e.message);
                     json = {};
                 }
-                if (!Array.isArray(json.inherits)) {
-                    json.inherits = [];
+                if (!Array.isArray(json.entries)) {
+                    json.entries = [];
                 }
-                const exists = json.inherits.some(item => item && item.path === '$INHERIT_PATH');
+                const exists = json.entries.some(item => item && item.path === '$TEAM_SKILLS_PATH');
                 if (!exists) {
-                    json.inherits.unshift({ path: '$INHERIT_PATH' });
+                    json.entries.unshift({ path: '$TEAM_SKILLS_PATH' });
+                }
+                // 平滑清理历史遗留的无效 inherits (../.agents/skills.json)
+                if (Array.isArray(json.inherits)) {
+                    json.inherits = json.inherits.filter(item => !(item && item.path === '../.agents/skills.json'));
+                    if (json.inherits.length === 0) {
+                        delete json.inherits;
+                    }
                 }
                 fs.writeFileSync(file, JSON.stringify(json, null, 2) + '\n', 'utf8');
             " "$SKILLS_JSON"
-            echo "[*] 已成功将通用继承路径合并进现有 skills.json（保留子项目原有配置）"
+            echo "[*] 已成功将通用技能路径合并进现有 skills.json（保留子项目原有配置）"
         else
             # 若无 node，使用文本插入兜底
             TMP_JSON=$(mktemp)
             awk '
                 BEGIN { inserted = 0 }
-                /^[[:space:]]*"inherits"[[:space:]]*:[[:space:]]*\[/ {
+                /^[[:space:]]*"entries"[[:space:]]*:[[:space:]]*\[/ {
                     print $0;
-                    print "    { \"path\": \"'$INHERIT_PATH'\" },";
+                    print "    { \"path\": \"'$TEAM_SKILLS_PATH'\" },";
                     inserted = 1;
                     next;
                 }
                 /^[[:space:]]*\{/ && !inserted {
                     print $0;
-                    print "  \"inherits\": [ { \"path\": \"'$INHERIT_PATH'\" } ],";
+                    print "  \"entries\": [ { \"path\": \"'$TEAM_SKILLS_PATH'\" } ],";
                     inserted = 1;
                     next;
                 }
                 { print }
             ' "$SKILLS_JSON" > "$TMP_JSON"
             mv "$TMP_JSON" "$SKILLS_JSON"
-            echo "[*] 已注入继承路径进现有 skills.json"
+            echo "[*] 已注入通用技能路径进现有 skills.json"
         fi
     fi
 fi

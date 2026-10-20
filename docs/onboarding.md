@@ -33,7 +33,7 @@ git clone <团队远程Git地址>/team-agent-standards.git .agents
 
 ### 2. 提交接入配置到业务仓库
 该脚本采用无损合并设计：
-- `.agents/skills.json`：声明继承父级通用技能（保留项目已有私有技能）；
+- `.agents/skills.json`：声明引入通用技能目录（保留项目已有私有技能）；
 - `AGENTS.md`：原生引入团队通用编码红线与 Git 规范（保留项目原标题与原有业务规则）。
 
 直接将它们提交至子仓库：
