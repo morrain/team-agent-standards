@@ -41,6 +41,14 @@
       "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
       "installedAt": "2026-10-20T06:34:00.000Z"
     },
+    "implement": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/implement/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-21T07:30:00.000Z"
+    },
     "implement-spec": {
       "source": "mattpocock/skills",
       "sourceType": "github",

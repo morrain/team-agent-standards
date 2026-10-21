@@ -273,6 +273,6 @@ echo "后续步骤："
 echo "  1. 提交接入配置到业务仓库 Git："
 echo "     git add .agents/ docs/agents/ GLOSSARY.md $([ -n "$EXISTING_RULE_FILE" ] && basename "$EXISTING_RULE_FILE" || echo "AGENTS.md")"
 echo "     git commit -m 'chore: enable team-agent-standards'"
-echo "  2. 即可在当前业务项目中无缝使用团队全部 13 个通用技能与 4 大规则！"
+echo "  2. 即可在当前业务项目中无缝使用团队全部 14 个通用技能与 4 大规则！"
 echo ""
 

@@ -5,7 +5,7 @@
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)]()
 [![Platform](https://img.shields.io/badge/Platform-Universal%20Coding%20Agents-blue.svg)]()
-[![Skills](https://img.shields.io/badge/Skills-13%20Core%20SOPs-orange.svg)]()
+[![Skills](https://img.shields.io/badge/Skills-14%20Core%20SOPs-orange.svg)]()
 [![Rules](https://img.shields.io/badge/Rules-4%20Pillars-purple.svg)]()
 
 
@@ -58,7 +58,7 @@ graph LR
 ```
 
 - **静态规则（Rules）**：4 大质量宪法常驻 Agent 系统上下文，严格约束行为底线；
-- **动态流程（Skills）**：经受业界实战检验的 13 大核心工程技能（SOP），覆盖研发全生命周期与底层质询/建模；
+- **动态流程（Skills）**：经受业界实战检验的 14 大核心工程技能（SOP），覆盖研发全生命周期与底层质询/建模；
 - **跨项目复用（Cross-Project Reuse）**：业务项目两行配置无损接入，Vendor 模式离线可用，团队更新一人拉取、全组即时生效。
 
 
@@ -146,7 +146,8 @@ git push
 | **规格说明** | `/to-spec` | 规格说明书生成 | 访谈结束后，将对话中达成的分散技术共识整理为结构严密的工程设计规格文档 | 形成严密 Spec，作为后续编码与测试唯一契约 |
 | **任务切片** | `/to-tickets` | 原子工单拆解 | 将大型 Spec 拆解为 3~5 个声明前置依赖的原子工单（Tickets），小步快跑 | 避免大提示词引起的 Token 耗尽与上下文遗忘 |
 | **测试驱动** | `/tdd` | 测试驱动开发 | 编写核心逻辑或修复复杂 Bug，强迫遵循“红-绿-重构（Red-Green-Refactor）” | 先写失败测试再写实现，杜绝脆弱测试 |
-| **精准实现** | `/implement-spec` | 依规格交付 | 严格按照 Spec 规格书或任务工单编写生产代码 | 精准实现指定范围，杜绝过度设计 (YAGNI) |
+| **单任务交付** | `/implement` | 单任务轻量实现 | 围绕单任务或小特性，在当前分支直接驱动 TDD、自测与代码审查并提交 | 日常小步快跑，端到端极速闭环交付 |
+| **并发编排** | `/implement-spec` | 多工单并发交付 | 针对大型 Spec 的任务依赖图，调度多背景子 Agent 与 Worktree 并发构建 | 自动化处理复杂任务图，并发落地完整特性 |
 | **科学排错** | `/diagnosing-bugs` | 假设闭环排错 | 遇到棘手 Bug 或性能回归，按“定位事实 $\to$ 根因假设 $\to$ 靶向验证”闭环排查 | 杜绝在没有看清根因时的随机盲目试错 |
 | **深度设计** | `/codebase-design` | 深度模块设计 | 指导复杂模块接口抽象、设计深层模块（Deep Modules）与寻找合理模块缝隙 | 接口极简、实现强大，减少系统耦合度 |
 | **双轴审查** | `/code-review` | 规范与需求双轴审查 | 提 PR 前运行，并行启动 Standards 轴（团队代码红线）与 Spec 轴（需求契约）审查 | 提前发现安全漏洞、代码坏味道与需求遗漏 |
