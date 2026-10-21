@@ -28,6 +28,15 @@
 - **常驻性**：与按需调用的 Skills（技能）不同，Rules 不需要敲快捷指令触发，而是随业务项目的 `AGENTS.md` / `GEMINI.md` 自动内嵌至 Agent 的系统 Prompt 中；
 - **最高优先级**：当用户提示词与规则发生冲突时（例如要求写个“临时 TODO 占位代码”或“先忽略报错吞掉异常”），Agent 必须主动提示违背团队规则，并给出符合规范的解决方案。
 
+### 1.1 四大核心支柱定位与职责分工
+
+| 规则文件 | 规范名称 | 核心职责定位与治理范围 |
+| :--- | :--- | :--- |
+| **[`rules/agent.md`](../rules/agent.md)** | **Agent 行为准则与交互纪律** | 定义所有 AI Agent 在理解任务、编写代码、执行自测、排错以及人机协同交互时的底线行为守则与操作授权边界。 |
+| **[`rules/common.md`](../rules/common.md)** | **通用代码质量规范与安全红线** | 团队所有语言与工程项目的通用工程质量、架构分层、防御性编程、包管理器与最高安全红线准则。 |
+| **[`rules/testing.md`](../rules/testing.md)** | **自动化测试与质量守护规范** | 团队所有项目自动化测试的设计基准、TDD 红绿循环、Mock 边界隔离与测试执行/断言纪律。 |
+| **[`rules/git.md`](../rules/git.md)** | **Git 协同与提交规范** | 团队所有代码仓库通用的 Git 提交（Conventional Commits）、分支管理、PR 描述规范与变动操作授权防线。 |
+
 ---
 
 ## 2. 核心红线深度解读与代码对照 (Good vs Bad)
@@ -254,6 +263,83 @@ import type { UserProfileContract } from "@/types/user";
 ```
 
 - **交互杜绝二次长篇复述**：已写入项目文件或 Artifact 的完整内容，严禁在聊天窗口中全盘重复打印；仅提炼核心变更与下一步决策，节约双方阅读与 Token 成本。
+
+---
+
+### 2.11 工作区自洁守则与排错资产清理 (Workspace Hygiene & Scratch Cleanup)
+
+- **核心原则**：临时调试脚本（如 `test_debug.py`、`temp.js`、数据 dump）必须隔离在临时目录，任务交付前强制主动清理，严禁残留于项目源码中。
+
+```text
+❌ 典型违规场景：
+Agent 在排错过程中在 src/ 目录下新建了 test_api.py、dump.json、debug.log，任务完成后未清理，随着 git add 混入业务代码提交。
+
+✅ 规范做法：
+排错临时代码存放在 scratch/ 或临时目录；任务完成并在提请交付前，主动 rm 清理所有临时探针脚本与测试生成文件，保持 git status 纯净。
+```
+
+---
+
+### 2.12 依赖引入纪律与包管理器一致性 (Dependency Discipline)
+
+- **核心原则**：自动检测锁定文件并严格保持包管理器唯一，严禁包名幻觉，新增外部依赖必须提前征求用户确认。
+
+```text
+❌ 严重违规：
+1. 项目根目录已有 pnpm-lock.yaml，Agent 却在终端运行 npm install，生成 package-lock.json 并导致幽灵依赖冲突；
+2. 凭空捏造不存在的依赖包名（幻觉包），引入潜在供应链恶意投毒风险；
+3. 未经开发者同意，随手引入重型三方库。
+
+✅ 规范做法：
+1. 感知到已有 Lock 文件后，严格使用对应的包管理器工具（如 pnpm / yarn / poetry / uv / go mod / cargo）；
+2. 优先使用语言标准库原生能力；
+3. 必须新增外部库时，先向开发者说明库名、引入动机与成熟度，获得许可后再行安装。
+```
+
+---
+
+### 2.13 防御性内存与流式/分页原则 (Stream & Pagination Defense)
+
+- **核心原则**：处理未限定体积的数据时，必须使用流式（Stream）或分页拉取，杜绝一次性读入全量数据导致生产环境内存溢出（OOM）。
+
+```typescript
+// ❌ 坏味道：无视文件体积，一次性全量载入内存
+const content = fs.readFileSync(largeFilePath, "utf-8");
+
+// ✅ 规范做法：使用流式按块读取与处理
+const readStream = fs.createReadStream(largeFilePath, { encoding: "utf-8" });
+for await (const chunk of readStream) {
+  processChunk(chunk);
+}
+```
+
+---
+
+### 2.14 架构一致性与严禁越权过度重构 (Architectural Consistency & No Uninvited Refactoring)
+
+- **核心原则**：遵循项目现有的分层架构和依赖流向，严禁在执行局部功能或修复 Bug 时越权推翻原有架构。
+
+```text
+❌ 违规行为：
+接收到一个“修复登录超时提示”的小工单，Agent 顺手把原项目的分层结构推翻，擅自把 Redux 换成 Zustand，或在表现层组件内直接拼写持久化查询跳过 Service 层。
+
+✅ 规范做法：
+遵循既有分层调用关系（如 UI/Controller -> Service -> Repository/DAO）；保持既有代码风格与工具链生态，不搞不请自来的过度设计。
+```
+
+---
+
+### 2.15 Git 衍生资产与大文件防泄漏审查 (Asset Leak Prevention)
+
+- **核心原则**：提请提交前核对暂存区，严禁将构建产物、依赖包目录或大体积二进制文件提交入库。
+
+```text
+❌ 违规操作：
+直接运行 git add . 将 dist/ 构建输出目录、node_modules/ 依赖或 50MB 的日志文件暂存入库。
+
+✅ 规范做法：
+在提请暂存前检查状态，若发现未被忽略的本地生成物，先在 .gitignore 中添加规则，再仅暂存业务源码改动。
+```
 
 ---
 
