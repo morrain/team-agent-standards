@@ -80,6 +80,31 @@
       "skillPath": "skills/productivity/handoff/SKILL.md",
       "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
       "installedAt": "2026-10-20T06:34:00.000Z"
+    },
+    "grilling": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/productivity/grilling/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-21T04:30:00.000Z"
+    },
+    "domain-modeling": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/domain-modeling/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-21T04:30:00.000Z"
+    },
+    "setup-matt-pocock-skills": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
+      "commitHash": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "installedAt": "2026-10-21T04:30:00.000Z"
     }
   }
 }
+

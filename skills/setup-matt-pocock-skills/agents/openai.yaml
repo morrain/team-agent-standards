@@ -1,0 +1,3 @@
+interface:
+  display_name: "Setup Skills"
+  short_description: "Configure issue tracker and domain docs"

@@ -170,13 +170,109 @@ else
     fi
 fi
 
+# 4. 智能静默配置 Issue Tracker 与 Domain 架构骨架 (Matt Pocock Skills Zero-Config)
+
+DOCS_AGENTS_DIR="$TARGET_DIR/docs/agents"
+if [ ! -d "$DOCS_AGENTS_DIR" ]; then
+    mkdir -p "$DOCS_AGENTS_DIR"
+fi
+
+ISSUE_TRACKER_FILE="$DOCS_AGENTS_DIR/issue-tracker.md"
+if [ ! -f "$ISSUE_TRACKER_FILE" ]; then
+    GIT_REMOTE_URL=$(git -C "$TARGET_DIR" remote get-url origin 2>/dev/null || true)
+    if echo "$GIT_REMOTE_URL" | grep -qi "github.com"; then
+        cat << 'EOF' > "$ISSUE_TRACKER_FILE"
+# Issue Tracker
+
+Issues live in GitHub Issues for this repo.
+
+## Operations
+
+- Fetch an issue: `gh issue view <number> --json title,body,comments`
+- Create an issue: `gh issue create --title "<title>" --body "<body>" --label "<labels>"`
+- Close an issue: `gh issue close <number>`
+- List ready issues: `gh issue list --label "ready-for-agent"`
+EOF
+        echo "[+] 智能识别 GitHub 仓库，静默预置 Issue Tracker 配置: docs/agents/issue-tracker.md"
+    elif echo "$GIT_REMOTE_URL" | grep -qi "gitlab"; then
+        cat << 'EOF' > "$ISSUE_TRACKER_FILE"
+# Issue Tracker
+
+Issues live in GitLab Issues for this repo.
+
+## Operations
+
+- Fetch an issue: `glab issue view <id>`
+- Create an issue: `glab issue create --title "<title>" --description "<body>" --label "<labels>"`
+- Close an issue: `glab issue close <id>`
+- List ready issues: `glab issue list --label "ready-for-agent"`
+EOF
+        echo "[+] 智能识别 GitLab 仓库，静默预置 Issue Tracker 配置: docs/agents/issue-tracker.md"
+    else
+        cat << 'EOF' > "$ISSUE_TRACKER_FILE"
+# Issue Tracker
+
+Issues live locally in this repo as markdown files under `.scratch/<feature-slug>/issues/` or `docs/tickets/`.
+
+## Operations
+
+- Create a ticket: write `.scratch/<feature-slug>/issues/<NN>-<slug>.md` using the ticket template.
+- Read a ticket: read `.scratch/<feature-slug>/issues/<NN>-<slug>.md`.
+- Update/Close a ticket: update the status line in the ticket file to `Status: closed` or `Status: completed`.
+EOF
+        echo "[+] 预置本地 Markdown 模式 Issue Tracker 配置: docs/agents/issue-tracker.md"
+    fi
+else
+    echo "[✓] 现有 docs/agents/issue-tracker.md 已存在，跳过覆盖"
+fi
+
+TRIAGE_LABELS_FILE="$DOCS_AGENTS_DIR/triage-labels.md"
+if [ ! -f "$TRIAGE_LABELS_FILE" ]; then
+    cat << 'EOF' > "$TRIAGE_LABELS_FILE"
+# Triage Labels
+
+- `ready-for-agent`: ready for an agent to pick up and implement
+- `in-progress`: currently being worked on
+- `blocked`: blocked by other tickets or questions
+- `wontfix`: will not implement
+EOF
+    echo "[+] 静默预置标签配置: docs/agents/triage-labels.md"
+fi
+
+DOMAIN_DOCS_FILE="$DOCS_AGENTS_DIR/domain.md"
+if [ ! -f "$DOMAIN_DOCS_FILE" ]; then
+    cat << 'EOF' > "$DOMAIN_DOCS_FILE"
+# Domain Documentation
+
+- Vocabulary lives in `GLOSSARY.md` at repo root.
+- Architectural decisions live in `docs/adr/`.
+EOF
+    echo "[+] 静默预置领域文档定位: docs/agents/domain.md"
+fi
+
+# 确保 GLOSSARY.md 与 docs/adr/ 骨架存在
+if [ ! -f "$TARGET_DIR/GLOSSARY.md" ]; then
+    cat << 'EOF' > "$TARGET_DIR/GLOSSARY.md"
+# Project Glossary
+
+Canonical domain vocabulary and terminology for this repository.
+EOF
+    echo "[+] 初始化项目业务词汇表骨架: GLOSSARY.md"
+fi
+
+if [ ! -d "$TARGET_DIR/docs/adr" ]; then
+    mkdir -p "$TARGET_DIR/docs/adr"
+    echo "[+] 初始化架构决策记录目录: docs/adr/"
+fi
+
 echo ""
 echo "================================================="
 echo "  ✓ 业务项目规范接入完成！"
 echo "================================================="
 echo "后续步骤："
 echo "  1. 提交接入配置到业务仓库 Git："
-echo "     git add .agents/skills.json $([ -n "$EXISTING_RULE_FILE" ] && basename "$EXISTING_RULE_FILE" || echo "AGENTS.md")"
+echo "     git add .agents/ docs/agents/ GLOSSARY.md $([ -n "$EXISTING_RULE_FILE" ] && basename "$EXISTING_RULE_FILE" || echo "AGENTS.md")"
 echo "     git commit -m 'chore: enable team-agent-standards'"
-echo "  2. 即可在当前业务项目中无缝使用团队全部通用技能与规则！"
+echo "  2. 即可在当前业务项目中无缝使用团队全部 13 个通用技能与 4 大规则！"
 echo ""
+

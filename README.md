@@ -5,8 +5,9 @@
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)]()
 [![Platform](https://img.shields.io/badge/Platform-Universal%20Coding%20Agents-blue.svg)]()
-[![Skills](https://img.shields.io/badge/Skills-10%20Core%20SOPs-orange.svg)]()
+[![Skills](https://img.shields.io/badge/Skills-13%20Core%20SOPs-orange.svg)]()
 [![Rules](https://img.shields.io/badge/Rules-4%20Pillars-purple.svg)]()
+
 
 ---
 
@@ -57,8 +58,9 @@ graph LR
 ```
 
 - **静态规则（Rules）**：4 大质量宪法常驻 Agent 系统上下文，严格约束行为底线；
-- **动态流程（Skills）**：经受业界实战检验的 10 大核心工程技能（SOP），覆盖研发全生命周期；
+- **动态流程（Skills）**：经受业界实战检验的 13 大核心工程技能（SOP），覆盖研发全生命周期与底层质询/建模；
 - **跨项目复用（Cross-Project Reuse）**：业务项目两行配置无损接入，Vendor 模式离线可用，团队更新一人拉取、全组即时生效。
+
 
 ---
 
