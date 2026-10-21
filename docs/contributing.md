@@ -102,7 +102,7 @@ bash ./scripts/check-health.sh
 # 搜索社区技能
 bash ./scripts/manage-skills.sh find <关键词>
 
-# 安装并锁定技能版本至 .skill-lock.json
+# 安装并锁定技能版本至 skills-lock.json
 bash ./scripts/manage-skills.sh add <包名或GitHub仓库地址>
 
 # 审查工作区变动
@@ -114,7 +114,7 @@ bash ./scripts/manage-skills.sh audit
 
 ### 4. 通用上游开源技能维护与版本升级 SOP
 
-团队规范中心支持**多上游源共存**。所有外部技能的源头信息（GitHub URL、Commit Hash、技能路径及安装时间）均由根目录 [`.skill-lock.json`](.skill-lock.json) 统一定义与声明式锁定。
+团队规范中心支持**多上游源共存**。所有外部技能的源头信息（GitHub URL、Commit Hash、技能路径及安装时间）均由根目录 [`skills-lock.json`](skills-lock.json) 统一定义与声明式锁定。
 
 > 📌 **当前集成的上游基线示例**：  
 > 目前首批核心敏捷工程技能主要集成并派生自 `mattpocock/skills`（锁定时点：Commit `5beb35b`）。未来根据团队技术演进，可随时扩充引入其他社区优秀技能源或官方标准套件。
@@ -136,7 +136,7 @@ graph LR
    # 全量检查并拉取所有已锁定技能的上游更新
    bash ./scripts/manage-skills.sh update
    ```
-   工具将拉取上游最新改动并自动刷新 `.skill-lock.json` 中对应的 Commit Hash。
+   工具将拉取上游最新改动并自动刷新 `skills-lock.json` 中对应的 Commit Hash。
 2. **审查依赖链与自闭环（重点排查）**：
    运行 `bash ./scripts/manage-skills.sh audit` 仔细核对：
    - 上游是否新引入了未包含的子技能依赖或前置设置向导；

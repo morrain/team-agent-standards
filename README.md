@@ -5,7 +5,7 @@
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)]()
 [![Platform](https://img.shields.io/badge/Platform-Universal%20Coding%20Agents-blue.svg)]()
-[![Skills](https://img.shields.io/badge/Skills-14%20Core%20SOPs-orange.svg)]()
+[![Skills](https://img.shields.io/badge/Skills-15%20Core%20SOPs-orange.svg)]()
 [![Rules](https://img.shields.io/badge/Rules-4%20Pillars-purple.svg)]()
 
 
@@ -58,7 +58,7 @@ graph LR
 ```
 
 - **静态规则（Rules）**：4 大质量宪法常驻 Agent 系统上下文，严格约束行为底线；
-- **动态流程（Skills）**：经受业界实战检验的 14 大核心工程技能（SOP），覆盖研发全生命周期与底层质询/建模；
+- **动态流程（Skills）**：经受业界实战检验的 15 大核心工程技能（SOP），覆盖研发全生命周期与底层质询/建模；
 - **跨项目复用（Cross-Project Reuse）**：业务项目两行配置无损接入，Vendor 模式离线可用，团队更新一人拉取、全组即时生效。
 
 
@@ -141,6 +141,7 @@ git push
 
 | 研发阶段 | 快捷指令 | 技能名称 | 核心职责与触发时机 | 产出成果 / 解决问题 |
 | :--- | :--- | :--- | :--- | :--- |
+| **宏观破雾** | `/wayfinder` | 迷雾决策图规划 | 面对超大或未知项目，在 Issue Tracker 上构建决策有向图，逐步决策破雾 | 驱散架构迷雾，产出清晰决策路线图 |
 | **需求对齐** | `/grill-me` | 需求深度挖掘 | 开启新特性前，Agent 扮演苛刻架构师穷追不舍地提问边界条件、异常分支与架构依赖 | 挖掘潜在盲区，达成充分设计共识 |
 | **方案决策** | `/grill-with-docs` | 架构决策沉淀 | 复杂重构与方案选型讨论，在深挖方案的同时自动在本地沉淀架构决策文档（ADR） | 留痕标准 ADR 记录，便于回溯评审 |
 | **规格说明** | `/to-spec` | 规格说明书生成 | 访谈结束后，将对话中达成的分散技术共识整理为结构严密的工程设计规格文档 | 形成严密 Spec，作为后续编码与测试唯一契约 |
