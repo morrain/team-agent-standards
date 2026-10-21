@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# 一键为业务子项目接入团队 Agent 规范 (team-agent-standards)
-# 用法: ../.agents/scripts/init-subproject.sh [目标目录]
+# 一键为业务项目接入团队 Agent 规范 (team-agent-standards)
+# 用法: ../.agents/scripts/init-project.sh [目标目录]
 # 支持已有 skills.json 无损合并与已有 AGENTS.md / GEMINI.md 安全注入
 
 set -e
@@ -12,15 +12,15 @@ fi
 TARGET_DIR=$(cd "$TARGET_DIR" && pwd)
 
 echo "================================================="
-echo "  正在为子项目配置 team-agent-standards 规范"
+echo "  正在为业务项目配置 team-agent-standards 规范"
 echo "  目标路径: $TARGET_DIR"
 echo "================================================="
 
-# 1. 确保子仓库 .agents 目录存在
+# 1. 确保业务项目 .agents 目录存在
 AGENT_DIR="$TARGET_DIR/.agents"
 if [ ! -d "$AGENT_DIR" ]; then
     mkdir -p "$AGENT_DIR"
-    echo "[+] 创建子项目配置目录: $AGENT_DIR"
+    echo "[+] 创建业务项目配置目录: $AGENT_DIR"
 fi
 
 # 2. 处理 .agents/skills.json（支持无损合并）
@@ -76,7 +76,7 @@ else
                 }
                 fs.writeFileSync(file, JSON.stringify(json, null, 2) + '\n', 'utf8');
             " "$SKILLS_JSON"
-            echo "[*] 已成功将通用技能路径合并进现有 skills.json（保留子项目原有配置）"
+            echo "[*] 已成功将通用技能路径合并进现有 skills.json（保留业务项目原有配置）"
         else
             # 若无 node，使用文本插入兜底
             TMP_JSON=$(mktemp)
@@ -172,11 +172,11 @@ fi
 
 echo ""
 echo "================================================="
-echo "  ✓ 子项目规范接入完成！"
+echo "  ✓ 业务项目规范接入完成！"
 echo "================================================="
 echo "后续步骤："
-echo "  1. 提交接入配置到子仓库 Git："
+echo "  1. 提交接入配置到业务仓库 Git："
 echo "     git add .agents/skills.json $([ -n "$EXISTING_RULE_FILE" ] && basename "$EXISTING_RULE_FILE" || echo "AGENTS.md")"
 echo "     git commit -m 'chore: enable team-agent-standards'"
-echo "  2. 即可在当前子项目中无缝使用团队全部通用技能与规则！"
+echo "  2. 即可在当前业务项目中无缝使用团队全部通用技能与规则！"
 echo ""
