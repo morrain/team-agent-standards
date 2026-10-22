@@ -13,6 +13,41 @@ SKILLS_DIR="$REPO_ROOT/skills"
 
 cd "$REPO_ROOT"
 
+# 网络与代理智能适配（解决国内直接访问 GitHub 容易遇到 Connection was reset 的问题）
+if [ -z "$http_proxy" ] && [ -z "$HTTP_PROXY" ] && [ -z "$(git config --get http.proxy 2>/dev/null)" ]; then
+    if command -v reg.exe &>/dev/null; then
+        PROXY_ENABLE=$(reg.exe query "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" //v ProxyEnable 2>/dev/null | grep -i "ProxyEnable" | grep -i "0x1")
+        if [ -n "$PROXY_ENABLE" ]; then
+            WIN_PROXY=$(reg.exe query "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" //v ProxyServer 2>/dev/null | grep -i "ProxyServer" | awk '{print $NF}' | tr -d '\r\n')
+            if [ -n "$WIN_PROXY" ]; then
+                [[ "$WIN_PROXY" != http* ]] && WIN_PROXY="http://$WIN_PROXY"
+                echo "[代理适配] 检测到系统网络代理 ($WIN_PROXY)，已自动启用以保证 GitHub 访问正常..."
+                export http_proxy="$WIN_PROXY"
+                export https_proxy="$WIN_PROXY"
+                export HTTP_PROXY="$WIN_PROXY"
+                export HTTPS_PROXY="$WIN_PROXY"
+            fi
+        fi
+    fi
+fi
+
+# 自动归一化：若 skills CLI 安装到了 .agents/skills/，自动移至项目标准的 skills/ 目录
+sync_installed_skills() {
+    if [ -d "$REPO_ROOT/.agents/skills" ]; then
+        for item in "$REPO_ROOT/.agents/skills"/*; do
+            if [ -d "$item" ]; then
+                pname=$(basename "$item")
+                echo "[+] 同步规范目录: .agents/skills/$pname -> skills/$pname"
+                rm -rf "$SKILLS_DIR/$pname"
+                # 在 Windows 环境下，直接 mv 刚写入的目录容易因文件句柄未释放触发 Permission Denied，优先采用复制后清理策略
+                cp -rf "$item" "$SKILLS_DIR/$pname" 2>/dev/null || mv "$item" "$SKILLS_DIR/$pname"
+                rm -rf "$item"
+            fi
+        done
+        rm -rf "$REPO_ROOT/.agents"
+    fi
+}
+
 case "$ACTION" in
     "list"|"ls")
         echo "=== 当前 team-agent-standards 已安装技能列表 ==="
@@ -76,18 +111,7 @@ case "$ACTION" in
         echo "正在安装第三方技能: $PACKAGE ${EXTRA_ARGS[*]}..."
         npx skills add "$PACKAGE" "${EXTRA_ARGS[@]}" -y --copy
 
-        # 自动归一化：若 skills CLI 安装到了 .agents/skills/，自动移至项目标准的 skills/ 目录
-        if [ -d "$REPO_ROOT/.agents/skills" ]; then
-            for item in "$REPO_ROOT/.agents/skills"/*; do
-                if [ -d "$item" ]; then
-                    pname=$(basename "$item")
-                    echo "[+] 同步规范目录: .agents/skills/$pname -> skills/$pname"
-                    rm -rf "$SKILLS_DIR/$pname"
-                    mv "$item" "$SKILLS_DIR/$pname"
-                fi
-            done
-            rm -rf "$REPO_ROOT/.agents"
-        fi
+        sync_installed_skills
 
         echo "[✓] 安装完成！"
         echo "后续提示："
@@ -111,17 +135,7 @@ case "$ACTION" in
     "update")
         echo "正在拉取所有第三方技能的上游更新..."
         npx skills update -y
-        # 同样进行目录归一化
-        if [ -d "$REPO_ROOT/.agents/skills" ]; then
-            for item in "$REPO_ROOT/.agents/skills"/*; do
-                if [ -d "$item" ]; then
-                    pname=$(basename "$item")
-                    rm -rf "$SKILLS_DIR/$pname"
-                    mv "$item" "$SKILLS_DIR/$pname"
-                fi
-            done
-            rm -rf "$REPO_ROOT/.agents"
-        fi
+        sync_installed_skills
         echo "[✓] 更新完成！建议使用 ./scripts/manage-skills.sh audit 审查变更"
         ;;
     "audit")
