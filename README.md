@@ -48,7 +48,12 @@ graph LR
 在任意业务项目根目录运行一行命令即可完成初始化或增量更新：
 
 ```bash
+# 托管于 GitHub
 npx github:<owner>/team-agent-standards
+
+# 托管于内网 / 自建 GitLab（HTTP / HTTPS）
+npx git+http://<gitlab-host>/<group>/team-agent-standards.git
+npx git+https://<gitlab-host>/<group>/team-agent-standards.git
 ```
 
 ### 常用参数

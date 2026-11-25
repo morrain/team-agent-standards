@@ -25,7 +25,12 @@
 在业务项目根目录打开任意终端（Windows PowerShell、Git Bash、macOS/Linux Terminal 均可），执行：
 
 ```bash
+# 托管于 GitHub
 npx github:<owner>/team-agent-standards
+
+# 托管于内网 / 自建 GitLab（HTTP / HTTPS）
+npx git+http://<gitlab-host>/<group>/team-agent-standards.git
+npx git+https://<gitlab-host>/<group>/team-agent-standards.git
 ```
 
 工具将自动完成以下操作：
