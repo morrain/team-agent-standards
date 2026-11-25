@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "source": "mattpocock/skills",
+      "scope": "global",
+      "skills": [
+        "ask-matt",
+        "code-review",
+        "codebase-design",
+        "diagnosing-bugs",
+        "domain-modeling",
+        "grill-me",
+        "grill-with-docs",
+        "grilling",
+        "handoff",
+        "implement",
+        "implement-spec",
+        "prototype",
+        "research",
+        "setup-matt-pocock-skills",
+        "tdd",
+        "to-spec",
+        "to-tickets",
+        "wayfinder"
+      ],
+      "description": "Matt Pocock 敏捷工程核心技能套件（需求访谈、规格、工单、TDD、排错与审查）"
+    },
+    {
+      "source": "vercel-labs/skills",
+      "scope": "global",
+      "skills": [
+        "find-skills"
+      ],
+      "description": "开源技能发现与按需检索安装助手"
+    },
+    {
+      "source": "vercel-labs/agent-skills",
+      "scope": "project",
+      "skills": [
+        "web-design-guidelines"
+      ],
+      "optional": true,
+      "prompt": "当前是否为前端项目或需要制作页面原型？是否安装 web-design-guidelines 到本项目",
+      "description": "Web 界面设计与可访问性审查指南（适用于前端及页面原型项目）"
+    }
+  ]
+}

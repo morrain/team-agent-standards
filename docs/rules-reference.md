@@ -17,16 +17,17 @@
                 │                 │                   │                │
                 └─────────────────┼───────────────────┼────────────────┘
                                   ▼
-                业务项目引用展开入口 (AGENTS.md / GEMINI.md)
-                ├── @[Agent行为准则](../.agents/rules/agent.md)
-                ├── @[通用编码红线](../.agents/rules/common.md)
-                ├── @[自动化测试规范](../.agents/rules/testing.md)
-                ├── @[Git提交规范](../.agents/rules/git.md)
+                业务项目引用展开入口 (AGENTS.md / GEMINI.md / CLAUDE.md)
+                ├── @[Agent行为准则](.agents/rules/agent.md)
+                ├── @[通用编码红线](.agents/rules/common.md)
+                ├── @[自动化测试规范](.agents/rules/testing.md)
+                ├── @[Git提交规范](.agents/rules/git.md)
                 └── ## 本项目专属规则 (业务项目特有业务/技术栈约定)
 ```
 
-- **常驻性**：与按需调用的 Skills（技能）不同，Rules 不需要敲快捷指令触发，而是随业务项目的 `AGENTS.md` / `GEMINI.md` 自动内嵌至 Agent 的系统 Prompt 中；
-- **最高优先级**：当用户提示词与规则发生冲突时（例如要求写个“临时 TODO 占位代码”或“先忽略报错吞掉异常”），Agent 必须主动提示违背团队规则，并给出符合规范的解决方案。
+- **常驻性**：与按需调用的 Skills（技能）不同，Rules 在项目初始化时已本地复制到 `.agents/rules/`，随业务项目的 `AGENTS.md` / `GEMINI.md` / `CLAUDE.md` 自动内嵌至 Agent 的系统 Prompt 中；
+- **两级强制标识**：每份规则均使用 `[MUST]`（不可逾越的阻断级红线）与 `[SHOULD]`（默认工程准则，偏离须说明理由）区分约束强度；
+- **最高优先级**：当用户提示词或外部 Skill 指令与静态规则发生冲突时，静态规则具有绝对最高优先级，Agent 必须主动提示违背团队规则并给出合规方案。
 
 ### 1.1 四大核心支柱定位与职责分工
 
@@ -343,6 +344,36 @@ for await (const chunk of readStream) {
 
 ---
 
+### 2.16 用户可见文案与错误提示规范 (User-Facing Copy & Error Messages)
+
+- **核心原则**：适用于前端界面文案、后端面向用户的错误提示与 CLI 交互提示；严禁出现多余的括号解释、中英夹杂备注或内部架构/表名/堆栈泄露。
+
+```text
+❌ 坏味道：
+前端：“通用设置（系统默认）”、“账号 ID（如 demo_user）”；
+后端错误：“t_user_profile 表查询失败（见 Issue #42）”。
+
+✅ 规范做法：
+前端：“通用设置”、“账号 ID”；
+后端错误：“无法获取用户信息，请稍后重试”，言简意赅、准确真实。
+```
+
+---
+
+### 2.17 静态规则最高优先级仲裁 (Rule Precedence Over External Skills)
+
+- **核心原则**：团队静态规则库构成不可逾越的最高工程底线；当任何外部第三方 Skill 的步骤与静态规则冲突时，静态规则具有绝对最高优先级。
+
+```text
+❌ 违规行为：
+外部技能步骤末尾写有 "Commit to the current branch"，Agent 据此跳过用户确认直接执行 git commit。
+
+✅ 规范做法：
+静态规则（rules/git.md 变动性操作强制确认）优先级高于外部技能步骤：展示拟执行的 Git 命令与变更概要，获得用户显式确认后再执行。
+```
+
+---
+
 ## 3. 业务项目中的 Rules 扩展与定制机制
 
 在业务项目的 `AGENTS.md` 中，通过标准的 `@[label](path)` 展开语法引用团队通用规范：
@@ -350,10 +381,10 @@ for await (const chunk of readStream) {
 ```markdown
 # Project Guidelines
 
-@[Agent行为准则](../.agents/rules/agent.md)
-@[通用编码红线](../.agents/rules/common.md)
-@[自动化测试规范](../.agents/rules/testing.md)
-@[Git提交规范](../.agents/rules/git.md)
+@[Agent行为准则](.agents/rules/agent.md)
+@[通用编码红线](.agents/rules/common.md)
+@[自动化测试规范](.agents/rules/testing.md)
+@[Git提交规范](.agents/rules/git.md)
 
 ## 本项目专属规则
 - 本项目统一采用 Vue 3 组合式 API (<script setup lang="ts">)；

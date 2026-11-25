@@ -1,0 +1,33 @@
+{
+  "name": "team-agent-standards",
+  "version": "2.0.0",
+  "description": "团队统一的 AI Agent 研发规范与工程技能分发套件",
+  "type": "module",
+  "bin": {
+    "team-agent-standards": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "rules/",
+    "skills/",
+    "skills-manifest.json",
+    "templates/"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "init": "node ./bin/cli.js init",
+    "check": "node ./bin/cli.js check",
+    "new-skill": "node ./bin/cli.js new-skill",
+    "test": "node --test test"
+  },
+  "keywords": [
+    "ai-agent",
+    "coding-standards",
+    "agent-skills",
+    "rules"
+  ],
+  "license": "MIT"
+}

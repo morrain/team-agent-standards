@@ -1,144 +1,90 @@
 # 新人 5 分钟上手指南 (Developer Onboarding)
 
 欢迎使用 **`team-agent-standards`**！  
-本项目是团队统一的 **AI Agent 研发规范与工程技能套件**。无论你使用的是 Antigravity、Claude Code、Cursor 还是其他现代编码 Agent 工具，只需 5 分钟，即可将你本地的 Agent 辅助研发环境升级为具备团队严谨纪律、深度工程思维的专家级研发助手。
+只需前置安装 **Node.js >= 18**，在任意业务项目根目录执行一行命令，即可将团队静态规则、第三方工程技能与自研私有技能无缝接入你的开发工作流。
 
 ---
 
-## 🛠️ 前置准备与工作区约定
+## 🚀 快速接入业务项目
 
-为了确保跨业务项目声明式复用平滑生效，团队推荐在本地采用如下规范的工作区目录结构：
+### 场景一：加入已接入团队规范的业务项目
 
-```text
-codes/                      <-- 本地统一工作区根目录（如 ~/codes 或 D:/codes）
-├── .agents/                <-- [team-agent-standards 核心规范库]（必须命名为 .agents）
-├── project-alpha/          <-- 业务项目 A
-├── project-beta/           <-- 业务项目 B
-└── your-new-project/       <-- 你的新业务项目
+如果业务仓库根目录已经包含 `.agents/rules/` 与 `AGENTS.md`（或 `GEMINI.md` / `CLAUDE.md`）：
+
+1. 正常克隆并拉取业务项目；
+2. 如本机尚未安装团队依赖的全局第三方技能，在业务项目根目录运行一次：
+   ```bash
+   npx github:<owner>/team-agent-standards
+   ```
+   工具会自动跳过已存在项，仅补齐本机缺失的 `global` 级第三方技能。
+
+---
+
+### 场景二：为新项目或老项目首次开启规范 / 增量更新
+
+在业务项目根目录打开任意终端（Windows PowerShell、Git Bash、macOS/Linux Terminal 均可），执行：
+
+```bash
+npx github:<owner>/team-agent-standards
 ```
 
-- **操作系统支持**：Windows（在 **Git Bash** 中执行脚本）、macOS、Linux；
-- **环境依赖**：仅需 Git，**无需安装任何额外 npm 依赖，无需构建，离线可用**。
+工具将自动完成以下操作：
+1. **同步静态规则**：将最新 4 份团队规则复制到当前项目的 `.agents/rules/`；
+2. **无损更新入口文件**：自动识别已有 `AGENTS.md` / `agent.md` / `GEMINI.md` / `CLAUDE.md`（按优先级命中首个，或通过 `--entry <file>` 指定），增量注入 `.agents/rules/*.md` 引用，**100% 保留项目原标题与既有业务规则**；若项目无任何入口文件则新建 `AGENTS.md`；
+3. **自动迁移旧版 `../.agents`**：如老项目曾使用旧版跨父目录路径，自动将 `../.agents/rules/*.md` 迁移为 `.agents/rules/*.md`，并清理 `.agents/skills.json` 中的失效路径；
+4. **拷贝团队私有技能**：将团队自研技能同步至 `.agents/skills/`，同时完整保留业务项目自建的本地私有技能；
+5. **按清单安装第三方技能**：读取 [`skills-manifest.json`](../skills-manifest.json)，对本地缺失的 `global` / `project` 级第三方技能执行单次批量精准安装（Windows 下自动探测系统代理）。
+
+完成后，将项目级变更提交到业务仓库：
+
+```bash
+git add .agents/ AGENTS.md
+git commit -m "chore: enable team-agent-standards"
+```
 
 ---
 
-## 🚀 两种常见上手场景
+## 🎛️ 常用命令行参数
 
-### 场景一：加入已接入团队规范的现有业务项目（最常见场景）
+```bash
+# 先预览变更，不写入磁盘、不安装外部技能
+npx github:<owner>/team-agent-standards --dry-run
 
-如果你的业务项目已经在仓库中接入了规范（即项目根目录下已有 `.agents/skills.json` 和 `AGENTS.md`）：
+# 仅离线同步规则与私有技能（不联网安装外部技能）
+npx github:<owner>/team-agent-standards --skip-external
 
-1. **第一步：克隆团队规范核心库至工作区根目录（每台电脑仅需一次）**
-   在你的工作区根目录（如 `codes/`）打开 Git Bash：
-   ```bash
-   cd codes
-   git clone <团队远程Git地址>/team-agent-standards.git .agents
-   ```
-2. **第二步：正常拉取并打开你的业务项目**
-   ```bash
-   cd codes
-   git clone <业务项目Git地址>/project-alpha.git
-   ```
-3. **完成！**
-   在支持 Agent 的 IDE 中打开 `project-alpha`，你的编码 Agent 即刻自动加载团队全部 10 项工程技能与 4 大质量红线，**零额外配置，开箱即用！**
+# 强制刷新清单中的全部第三方技能到最新版本
+npx github:<owner>/team-agent-standards --update-skills
+
+# 指定目标项目目录、入口文件与目标 Agent
+npx github:<owner>/team-agent-standards --target ./my-app --entry CLAUDE.md --agent claude-code
+```
 
 ---
 
-### 场景二：为全新项目或尚未接入规范的历史业务项目开启规范
+## 🎯 你的第一次规范化交互体验
 
-当你新建了一个业务仓库，或需要将团队规范引入已有的旧业务项目时：
+1. **按需配置项目级 Issue Tracker**（若计划使用 `to-spec` / `to-tickets` / `implement-spec`）：
+   > `/setup-matt-pocock-skills`
+2. **需求边界深度访谈**：
+   > “我想添加手机号验证码登录功能。 /grill-me”
+3. **沉淀规格说明书**：
+   > “根据刚才讨论整理工程规格说明书。 /to-spec”
+4. **测试驱动开发与双轴审查**：
+   > “按 TDD 模式实现该接口。 /tdd”  
+   > “审查当前变更。 /code-review”
 
-1. **第一步：确保工作区 `.agents` 核心库已就绪**
-   如未克隆，请先在 `codes` 目录下执行：
-   ```bash
-   git clone <团队远程Git地址>/team-agent-standards.git .agents
-   ```
-2. **第二步：在业务项目中运行一键接入脚本**
-   进入业务项目根目录，在 Git Bash 中运行：
-   ```bash
-   cd codes/your-project
-   ../.agents/scripts/init-project.sh
-   ```
-   > 💡 **智能无损合并保障**：
-   > 脚本已内置防御性逻辑：
-   > - 若已有私有技能配置（`skills.json`），自动保留原内容并将团队通用路径无损合并；
-   > - 若已有规则说明文件（`AGENTS.md` 或 `GEMINI.md`），自动在原有一级标题下方增量注入规范，绝不覆盖项目原有业务规则，不产生重复标题。
-
-3. **第三步：将接入配置提交至业务代码仓库**
-   ```bash
-   git add .agents/skills.json AGENTS.md
-   git commit -m "chore: enable team-agent-standards"
-   git push
-   ```
-   只要提交这一对轻量文件，**团队中其他所有拉取该代码的同学也将自动生效规范，无需重新配置！**
+完整的全流程操作指南请查阅 [团队 Agent 敏捷研发 SOP 实战手册](workflow-guide.md)。
 
 ---
 
-## 🎯 你的第一次规范化交互体验 (First Interactive Session)
+## ❓ 常见问题 (FAQ)
 
-配置完成后，打开任意支持 Agent 的会话窗口，尝试体验我们推荐的敏捷工程 SOP：
+### Q1：团队更新了规则或私有技能，老项目如何同步？
+在业务项目根目录重新执行一次 `npx github:<owner>/team-agent-standards` 即可。已安装的第三方技能默认跳过，规则与私有技能会毫秒级安全覆盖更新，业务自定义规则与本地私有技能不受影响。
 
-### 体验 1：边界深度访谈 (`/grill-me`)
-在会话中输入你的初始需求构想，并在末尾加上 `/grill-me`：
-> “我想在当前项目中添加一个用户手机号登录功能，支持短信验证码。 /grill-me”
+### Q2：为什么不再把规则库克隆到父级 `../.agents` 目录？
+现代编码 Agent 普遍启用了工作区沙箱安全限制，禁止项目内配置向上级目录寻址。改为复制到项目本地 `.agents/rules/` 后，项目在任意嵌套目录或 CI 环境中均可独立工作。详细背景见 [ADR-0001](adr/0001-local-distribution-and-manifest-model.md)。
 
-**Agent 的反应**：  
-Agent 不会立即盲目堆写代码，而是立刻化身资深架构评审官，逐一向你抛出关键追问：
-- *验证码防刷机制（IP 限流与单手机号每天上限）如何设计？*
-- *验证码有效期与 Redis 缓存数据结构是怎样的？*
-- *首次手机号登录时，是自动创建新账号还是需要绑定已有账户？*
-- *短信服务商调用失败时的降级方案是什么？*
-
-### 体验 2：固化为设计规格说明书 (`/to-spec`)
-当你与 Agent 一一回答完上述边界问题后，直接输入：
-> “整理为工程设计规格文档。 /to-spec”
-
-**Agent 的反应**：  
-Agent 会将刚才讨论收敛的共识梳理为一份包含数据模型、API 契约、时序图与验收标准的结构化 Markdown 规格说明书。
-
-### 体验 3：测试驱动开发 (`/tdd`)
-面对规格中的具体接口，指示 Agent：
-> “按 TDD 模式开始编写短信发送验证接口。 /tdd”
-
-**Agent 的反应**：  
-Agent 严格遵守红-绿-重构纪律：先编写失败的单元测试用例 $\to$ 真实运行测试确认报错（Red） $\to$ 编写满足通过的最小实现代码 $\to$ 运行测试确认通过（Green）。
-
----
-
-## 📋 常用核心指令速查表 (Quick Reference)
-
-| 阶段 | 快捷指令 | 适用场景 |
-| :--- | :--- | :--- |
-| **宏观破雾** | `/wayfinder` | 面对复杂未知的大型项目，在 Issue Tracker 上建立决策图排障 |
-| **方案访谈** | `/grill-me` | 开发新需求前，深度挖掘边界漏洞与失败处理 |
-| **架构留痕** | `/grill-with-docs` | 复杂方案决策，对齐方案并自动在本地生成 ADR 记录 |
-| **提炼规格** | `/to-spec` | 将聊天对话提炼为严谨清晰的工程 Spec 说明书 |
-| **工单切片** | `/to-tickets` | 复杂大任务拆解为小步快跑、带依赖的原子工单 |
-| **测试驱动** | `/tdd` | 核心逻辑与复杂 Bug 修复，先写测试再写实现（红-绿-重构） |
-| **单任务交付** | `/implement` | 单任务轻量交付，当前分支直接驱动 TDD、自测与 Review |
-| **并发编排** | `/implement-spec` | 严格对照大型 Spec 与任务依赖图，多子 Agent 并发构建 |
-| **科学排错** | `/diagnosing-bugs` | 遇到复杂 Bug，按“定位事实-提出假设-靶向验证”闭环排查 |
-| **深度设计** | `/codebase-design` | 基于《软件设计哲学》指导公共接口与模块抽象 |
-| **双轴审查** | `/code-review` | 提 PR 前运行，按团队规范轴与需求轴并行双审查 |
-| **会话交接** | `/handoff` | 会话超长或需要换人接手时，压缩提炼当前进度交接文档 |
-
----
-
-## ❓ 常见问题与避坑指南 (FAQ)
-
-### Q1：为什么主仓库在本地克隆的目录名必须是 `.agents`？
-> **答**：这是团队跨业务项目声明式复用的相对路径约定。所有业务项目的 `.agents/skills.json` 均统一定向为 `../.agents/skills`。以统一的 `.agents` 命名不仅符合现代 AI Agent 目录命名规范，还能保证全团队所有工程的相对路径完全一致。
-
-### Q2：为什么这个套件不需要执行 `npm install` 或安装依赖？
-> **答**：本项目采用 **Vendor 源码内联模式**。所有核心技能源码和脚本均已完整打包并纳入 Git 版本库管理。这种设计保证了无论是在企业隔离内网、断网飞行模式还是无 Node.js 运行时环境中，均能随时开箱即用。
-
-### Q3：如果我们在业务项目中修改了代码或配置，会影响团队公共规范吗？
-> **答**：**绝对不会。** 业务项目与团队规范是解耦的单向引用关系。业务项目中的所有代码提交与变更仅保存在该业务项目的 Git 仓库中；只有当你进入父级 `.agents` 目录并通过 Git PR 向团队公共规范仓库提交代码时，才会参与公共规范库的演进。
-
-### Q4：团队发布了新的自研 Skill 或更新了代码红线，我该如何获取？
-> **答**：极其简单！只需进入本地 `.agents` 目录拉取最新代码：
-> ```bash
-> cd codes/.agents
-> git pull
-> ```
-> 拉取后，你本地所有的业务项目将立即自动生效最新规范与技能，无需逐个项目重新配置！
+### Q3：Windows 访问 GitHub 安装第三方技能经常超时怎么办？
+CLI 内置了 Windows 系统代理自动探测：只要你在系统中开启了代理（或设置了 `HTTP_PROXY` / `HTTPS_PROXY`），工具会自动透传给 `npx skills` 子进程。如果仍因网络临时中断，规则与私有技能不受影响，末尾会给出精确的重试命令。

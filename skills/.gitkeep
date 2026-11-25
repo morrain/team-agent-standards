@@ -1,0 +1,2 @@
+# 团队自研私有技能（Private Skills）存放目录
+# 使用 `npm run new-skill -- <skill-name>` 创建新的团队私有技能
