@@ -1,7 +1,7 @@
 # team-agent-standards
 
 > **团队统一的 AI Agent 研发规范与工程技能分发套件**  
-> 托管于 GitHub、零外部运行时依赖的 Node.js CLI，一行命令为业务项目无损接入团队静态规则、第三方工程技能与自研私有技能。
+> 托管于 GitLab、零外部运行时依赖的 Node.js CLI，一行命令为业务项目无损接入团队静态规则、第三方工程技能与自研私有技能。
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)]()
 [![Node](https://img.shields.io/badge/Node-%3E%3D18-blue.svg)]()
@@ -15,7 +15,7 @@
 
 ```mermaid
 graph LR
-    subgraph 团队规范仓库 [team-agent-standards on GitHub]
+    subgraph 团队规范仓库 [team-agent-standards on GitLab]
         R["静态规则 rules/<br>4 大质量宪法"]
         M["第三方技能清单 skills-manifest.json<br>声明 global / project 作用域"]
         P["私有技能 skills/<br>团队自研专属 SOP"]
@@ -48,10 +48,10 @@ graph LR
 在任意业务项目根目录运行一行命令即可完成初始化或增量更新：
 
 ```bash
-# 托管于 GitHub
+# 如果托管于 GitHub
 npx github:<owner>/team-agent-standards
 
-# 托管于内网 / 自建 GitLab（HTTP / HTTPS）
+# 如果托管于内网 / 自建 GitLab（HTTP / HTTPS）
 npx git+http://<gitlab-host>/<group>/team-agent-standards.git
 npx git+https://<gitlab-host>/<group>/team-agent-standards.git
 ```
